@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 
 from .models import Task
 from .serializers import TaskSerializer
-from .permissions import IsAssignedUser
+from .permissions import IsAssignedToUser
 
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
@@ -33,12 +33,9 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 
     def get_permissions(self):
-        # For update/delete detail
-        if self.action in ['update', 'partial_update', 'destroy']:
-            self.permission_classes = [IsAuthenticated, IsAssignedUser]
-        else:
-            self.permission_classes = [IsAuthenticated]
-            return super().get_permissions()
+        if self.action in ['update', 'partial_update', 'destroy', 'retrieve']:
+            return [IsAssignedToUser()]
+        return [IsAuthenticated()] 
 
 
 class ObtainTokenView(APIView):

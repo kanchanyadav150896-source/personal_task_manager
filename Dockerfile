@@ -1,9 +1,9 @@
 # Use official Python slim image
 FROM python:3.12-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# Set environment variables (fixed syntax)
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Set working directory
 WORKDIR /app
@@ -21,14 +21,14 @@ COPY requirements.txt /app/
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project
+# Copy project files
 COPY . /app/
+
+# Apply migrations first
+RUN python manage.py migrate
 
 # Collect static files (optional)
 RUN python manage.py collectstatic --noinput
-
-# Apply migrations (SQLite DB will be created automatically)
-RUN python manage.py migrate
 
 # Expose port
 EXPOSE 8000
