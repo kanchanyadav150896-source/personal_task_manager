@@ -27,8 +27,6 @@ COPY . /app/
 # Apply migrations first
 RUN python manage.py migrate
 
-# Collect static files (optional)
-RUN python manage.py collectstatic --noinput
 
 # Expose port
 EXPOSE 8000
